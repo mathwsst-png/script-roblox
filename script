@@ -8147,7 +8147,7 @@ do (function()
     end)
     if not ok then return end
     local t0 = os.clock()
-    while not chosen and os.clock() - t0 < 30 and alive() do task.wait(0.1) end
+    while not chosen and os.clock() - t0 < 3 and alive() do task.wait(0.1) end
     late = not chosen -- tidak dipilih dalam 30 detik: pakai bahasa terakhir
     if chosen then Config.save(true) end
 end)() end
