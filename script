@@ -31,13 +31,32 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-local Shared = ReplicatedStorage:WaitForChild("Shared")
-local WorldRemotes = ReplicatedStorage:WaitForChild("WorldRemotes")
+-- Berhenti dengan rapi (tanpa menggantung) kalau struktur game tidak cocok.
+local function bail(msg)
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Script berhenti", Text = msg, Duration = 15 })
+    end)
+    warn("[KzoyzOpus] " .. msg)
+    if G.__KzoyzOpus == Session then G.__KzoyzOpus = nil end
+end
+
+local Shared = ReplicatedStorage:WaitForChild("Shared", 10)
+local WorldRemotes = ReplicatedStorage:WaitForChild("WorldRemotes", 10)
+if not Shared or not WorldRemotes then
+    bail("Folder Shared / WorldRemotes tidak ditemukan. Game sudah update, script ini belum kompatibel.")
+    return
+end
 -- Remote lama (versi game sebelum ByteNet). Hanya dipakai kalau fungsi baru tidak ada.
 local SetTileRemote = WorldRemotes:FindFirstChild("SetTile")
 
-local ItemDB = require(Shared.ItemDB)
-local InventoryModule = require(Shared.Inventory)
+local ItemDBMod, InventoryMod = Shared:FindFirstChild("ItemDB"), Shared:FindFirstChild("Inventory")
+if not ItemDBMod or not InventoryMod then
+    bail("Modul ItemDB / Inventory tidak ditemukan di Shared. Game sudah update, script ini belum kompatibel.")
+    return
+end
+local ItemDB = require(ItemDBMod)
+local InventoryModule = require(InventoryMod)
 local NetOk, Net = pcall(require, Shared.Net)
 
 local GameGui = PlayerGui:WaitForChild("GameGui")
