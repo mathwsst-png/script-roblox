@@ -1,4 +1,3 @@
-
 local G = (getgenv and getgenv()) or _G
 for _, key in ipairs({ "__KzoyzOpus", "__GTFarm" }) do -- __GTFarm = nama versi lama
     if G[key] and G[key].Cleanup then pcall(G[key].Cleanup) end
@@ -42,8 +41,8 @@ local InventoryModule = require(Shared.Inventory)
 local NetOk, Net = pcall(require, Shared.Net)
 
 local GameGui = PlayerGui:WaitForChild("GameGui")
-local ParticlesOk, ParticlesModule = pcall(require, GameGui:WaitForChild("Particles"))
-local MenuModOk, MenuModule = pcall(require, GameGui:WaitForChild("WorldMenu"))
+local ParticlesOk, ParticlesModule = pcall(function() return require(GameGui:WaitForChild("Particles", 5)) end)
+local MenuModOk, MenuModule = pcall(function() return require(GameGui:WaitForChild("WorldMenu", 5)) end)
 local RolesOk, RolesModule = pcall(require, Shared:FindFirstChild("Roles"))
 local SfxOk, SfxModule = pcall(require, Shared:FindFirstChild("Sfx"))
 
